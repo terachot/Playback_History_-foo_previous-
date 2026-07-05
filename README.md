@@ -122,5 +122,5 @@ CMakeLists.txt                   # build configuration
 | | |
 |---|---|
 | Output file | `foo_previous.dll` |
-| Component name | My First Extension (VS Code) |
+| Component name | Playback History |
 | Version | 1.0 |
