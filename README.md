@@ -123,4 +123,4 @@ CMakeLists.txt                   # build configuration
 |---|---|
 | Output file | `foo_previous.dll` |
 | Component name | Playback History |
-| Version | 1.0 |
+| Version | 1.0.1 |
