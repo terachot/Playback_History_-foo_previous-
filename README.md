@@ -105,5 +105,5 @@ CMakeLists.txt                   # build configuration
 | | |
 |---|---|
 | Output file | `foo_previous.dll` |
-| Component name | Floating panel showing your last 20 played tracks, with click-to-play and a Back button to step through playback history. |
+| Component name | terachot |
 | Version | 1.0.1 |
