@@ -1,0 +1,36 @@
+﻿  stdafx.cpp
+  audio_math.cpp
+  audio_sample.cpp
+  base64.cpp
+  bigmem.cpp
+  bit_array.cpp
+  bsearch.cpp
+  charDownConvert.cpp
+  cpuid.cpp
+  crashWithMessage.cpp
+  filehandle.cpp
+  filetimetools.cpp
+  guid.cpp
+  other.cpp
+  pathUtils.cpp
+  pfc-fb2k-hooks.cpp
+  printf.cpp
+  selftest.cpp
+  SmartStrStr.cpp
+  sort.cpp
+  splitString2.cpp
+  string-compare.cpp
+  string-conv-lite.cpp
+  string-lite.cpp
+  string_base.cpp
+  string_conv.cpp
+  threads.cpp
+  timers.cpp
+  unicode-normalize.cpp
+  utf8.cpp
+  wildcard.cpp
+  win-objects.cpp
+D:\Doc\Work\foobar2000\sdk\pfc\win-objects.cpp(399,20): warning C4996: 'GetVersion': was declared deprecated
+  (compiling source file '/win-objects.cpp')
+  
+  pfc.vcxproj -> D:\Doc\Work\foobar2000\foobar2000_component_project\Debug\pfc.lib

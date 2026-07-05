@@ -1,0 +1,74 @@
+﻿  stdafx.cpp
+  abort_callback.cpp
+  advconfig.cpp
+  album_art.cpp
+  app_close_blocker.cpp
+  audio_chunk.cpp
+  audio_chunk_channel_config.cpp
+  cfg_var.cpp
+  cfg_var_legacy.cpp
+  chapterizer.cpp
+  commandline.cpp
+  commonObjects.cpp
+  completion_notify.cpp
+  componentversion.cpp
+  configStore.cpp
+  config_io_callback.cpp
+  config_object.cpp
+  console.cpp
+  dsp.cpp
+  dsp_manager.cpp
+  file_cached_impl.cpp
+  file_info.cpp
+  file_info_const_impl.cpp
+  file_info_impl.cpp
+  file_info_merge.cpp
+  file_operation_callback.cpp
+  filesystem.cpp
+  filesystem_helper.cpp
+  foosort.cpp
+  fsItem.cpp
+  guids.cpp
+  hasher_md5.cpp
+  image.cpp
+  input.cpp
+  input_file_type.cpp
+  link_resolver.cpp
+  mainmenu.cpp
+  main_thread_callback.cpp
+  mem_block_container.cpp
+  menu_helpers.cpp
+  menu_item.cpp
+  menu_manager.cpp
+  metadb.cpp
+  metadb_handle.cpp
+  metadb_handle_list.cpp
+  output.cpp
+  packet_decoder.cpp
+  playable_location.cpp
+  playback_control.cpp
+  playlist.cpp
+  playlist_loader.cpp
+  popup_message.cpp
+  preferences_page.cpp
+  replaygain.cpp
+  replaygain_info.cpp
+D:\Doc\Work\foobar2000\sdk\foobar2000\SDK\metadb.cpp(26,9): warning C4996: 'metadb_io::load_info_multi': was declared deprecated
+  (compiling source file '/metadb.cpp')
+  
+D:\Doc\Work\foobar2000\sdk\foobar2000\SDK\metadb.cpp(32,9): warning C4996: 'metadb_io::update_info_multi': was declared deprecated
+  (compiling source file '/metadb.cpp')
+  
+  service.cpp
+  tag_processor.cpp
+  tag_processor_id3v2.cpp
+  threaded_process.cpp
+  titleformat.cpp
+  track_property.cpp
+  ui.cpp
+  ui_element.cpp
+  utility.cpp
+D:\Doc\Work\foobar2000\sdk\foobar2000\SDK\playlist.cpp(789,25): warning C4996: 'metadb_io::load_info_multi': was declared deprecated
+  (compiling source file '/playlist.cpp')
+  
+  foobar2000_SDK.vcxproj -> D:\Doc\Work\foobar2000\foo_previous\x64\Debug\foobar2000_SDK.lib
