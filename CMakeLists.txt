@@ -6,8 +6,9 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(PROJECT_VERSION "1.0")
 
-# SDK Path - เปลี่ยนให้ตรงกับเครื่องคุณ
-set(FB2K_SDK_PATH "D:/Doc/Work/foobar2000/my_fb2k_extension/sdk/foobar2000/SDK" CACHE PATH "foobar2000 SDK path")
+# SDK Path - relative กับ CMakeLists.txt เสมอ ไม่ต้องแก้ตามเครื่อง
+# ถ้า SDK อยู่คนละที่จริงๆ ให้ override ผ่าน: cmake -B build -DFB2K_SDK_PATH="C:/path/to/SDK"
+set(FB2K_SDK_PATH "${CMAKE_CURRENT_SOURCE_DIR}/sdk/foobar2000/SDK" CACHE PATH "foobar2000 SDK path")
 
 if(NOT EXISTS "${FB2K_SDK_PATH}")
     message(FATAL_ERROR "SDK not found at ${FB2K_SDK_PATH}")
@@ -20,6 +21,8 @@ set(SOURCES
     src/dllmain.cpp
     src/history_manager.cpp
     src/history_panel.cpp
+    src/settings.cpp
+    src/preferences_page.cpp
     "${CMAKE_CURRENT_SOURCE_DIR}/sdk/foobar2000/foobar2000_component_client/component_client.cpp"
 )
 
@@ -27,6 +30,8 @@ set(HEADERS
     src/stdafx.h
     src/history_manager.h
     src/history_panel.h
+    src/settings.h
+    src/preferences_page.h
 )
 
 # ===== Create DLL =====
@@ -53,7 +58,7 @@ if(MSVC)
         COMPILE_FLAGS "/Yc\"stdafx.h\""
     )
 
-    set_source_files_properties(src/extension.cpp src/dllmain.cpp src/history_manager.cpp src/history_panel.cpp PROPERTIES
+    set_source_files_properties(src/extension.cpp src/dllmain.cpp src/history_manager.cpp src/history_panel.cpp src/settings.cpp src/preferences_page.cpp PROPERTIES
         COMPILE_FLAGS "/Yu\"stdafx.h\""
     )
 
