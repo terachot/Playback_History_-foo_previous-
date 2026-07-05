@@ -7,6 +7,6 @@
 // ========== Component Info ==========
 DECLARE_COMPONENT_VERSION(
     "Playback History Panel",
-    "1.0.1",
+    "1.0.2",
     "Floating panel showing your last 20 played tracks, with click-to-play and a Back button to step through playback history."
 );

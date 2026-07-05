@@ -24,11 +24,15 @@ public:
     // เรียกทุกครั้งที่ history เปลี่ยน เพื่ออัปเดตรายการที่แสดงในทุก instance ที่เปิดอยู่ (อาจมีมากกว่า 1 พร้อมกัน)
     static void refresh_all();
 
+    // เรียกหลัง Preferences > Tools > Playback History ถูก Apply เพื่ออัปเดต font/สี/ขนาดปุ่มทันทีในทุก instance
+    static void apply_settings_all();
+
 private:
     HWND m_hwnd = NULL;
     HWND m_listbox = NULL;
     HWND m_back_button = NULL;
-    t_ui_font m_font = NULL; // ไม่ได้เป็นเจ้าของ - มาจาก host ผ่าน query_font_ex()
+    t_ui_font m_font = NULL;         // font ที่ใช้งานจริงตอนนี้ (อาจเป็นของ host หรือของ m_custom_font)
+    t_ui_font m_custom_font = NULL;  // เราเป็นเจ้าของ - สร้างเมื่อผู้ใช้ตั้งขนาด font เองใน Preferences
     ui_element_instance_callback_ptr m_callback;
 
     COLORREF m_color_bg = RGB(255, 255, 255);

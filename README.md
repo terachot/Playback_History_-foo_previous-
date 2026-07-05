@@ -101,11 +101,18 @@ msbuild "sdk\pfc\pfc.vcxproj" /p:Configuration=Release /p:Platform=x64
 
 ```
 src/
-├── stdafx.h / stdafx.cpp        # precompiled header
-├── dllmain.cpp                  # DLL entry point
-├── extension.cpp                # DECLARE_COMPONENT_VERSION (component metadata)
-├── history_manager.h/.cpp       # play_callback hook, history storage, playback/back logic
-└── history_panel.h/.cpp         # ui_element / ui_element_instance (the panel UI itself)
+├── stdafx.h                    ← Precompiled header (includes SDK headers)
+├── stdafx.cpp                  ← PCH implementation (empty, compiled with /Yc)
+├── dllmain.cpp                 ← DLL entry point
+├── extension.cpp               ← DECLARE_COMPONENT_VERSION (component metadata only)
+├── history_manager.h           ← Playback history data model (no UI code)
+├── history_manager.cpp         ← play_callback hook, history storage, play/back logic
+├── history_panel.h             ← ui_element / ui_element_instance (the panel UI)
+├── history_panel.cpp           ← Panel window, controls, font/color theming
+├── settings.h                  ← cfg_int declarations (font size, bg color, button height)
+├── settings.cpp                ← cfg_int definitions + GUIDs + defaults
+├── preferences_page.h          ← preferences_page_v3 / preferences_page_instance (Tools page)
+└── preferences_page.cpp        ← Preferences UI: font size, bg color picker, button height
 CMakeLists.txt                   # build configuration
 ```
 

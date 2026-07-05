@@ -8,11 +8,6 @@ my_fb2k_extension/
 │
 ├── 🔨 CMakeLists.txt                ← ⭐ Actual build system in use (CMake)
 │
-├── 📄 Compile_commands.md          ← ⚠️ Leftover from earlier scaffolding, not
-│                                       kept in sync with the current CMake
-│                                       setup — treat CMakeLists.txt as the
-│                                       source of truth, not this file
-│
 ├── src/                            (Source Code)
 │   ├── stdafx.h                    ← Precompiled header (includes SDK headers)
 │   ├── stdafx.cpp                  ← PCH implementation (empty, compiled with /Yc)
@@ -21,7 +16,11 @@ my_fb2k_extension/
 │   ├── history_manager.h           ← Playback history data model (no UI code)
 │   ├── history_manager.cpp         ← play_callback hook, history storage, play/back logic
 │   ├── history_panel.h             ← ui_element / ui_element_instance (the panel UI)
-│   └── history_panel.cpp           ← Panel window, controls, font/color theming
+│   ├── history_panel.cpp           ← Panel window, controls, font/color theming
+│   ├── settings.h                  ← cfg_int declarations (font size, bg color, button height)
+│   ├── settings.cpp                ← cfg_int definitions + GUIDs + defaults
+│   ├── preferences_page.h          ← preferences_page_v3 / preferences_page_instance (Tools page)
+│   └── preferences_page.cpp        ← Preferences UI: font size, bg color picker, button height
 │
 ├── sdk/                            (foobar2000 SDK - external, not authored by us)
 │   ├── pfc/                        ← Utility lib. Has pfc.vcxproj -> pfc.lib
@@ -54,35 +53,12 @@ my_fb2k_extension/
    ✓ Links pfc / shared / foobar2000_SDK via include_external_msproject
    ✓ Sets output filename to foo_previous.dll via OUTPUT_NAME
 
-📄 Compile_commands.md  ⚠️ stale / not authoritative
-   ✓ Leftover reference doc from earlier scaffolding
-   ✓ Not regenerated alongside CMakeLists.txt changes — may list flags/paths
-     that no longer match the real build
-   ✓ Defer to CMakeLists.txt + README.md instead
-
-📄 Makefile  ⚠️ unused
-   ✓ Leftover MinGW/GNU Make path from earlier scaffolding
-   ✓ Never used in this project's actual build/debug history — everything
-     was built via `cmake` + MSVC
-   ✓ Safe to delete unless you specifically want a MinGW build path
-
-📄 my_fb2k_extension.vcxproj.bak  ⚠️ safe to delete
-   ✓ Backup taken during manual .vcxproj edits early in development
-   ✓ Those fixes now live in CMakeLists.txt instead (see README.md's "golden
-     rule": don't hand-edit the generated .vcxproj — it's overwritten on
-     every `cmake -B build`)
-
-.vscode/  ⚠️ optional
-   ✓ Leftover editor config from earlier scaffolding (tasks.json /
-     c_cpp_properties.json / settings.json, if present)
-   ✓ Not required — build/debug this project via `cmake`/`cmake --build`
-     directly, or open the folder in VS Code with the CMake Tools extension
-
 src/stdafx.h / stdafx.cpp
    ✓ Precompiled header pair
    ✓ Pulls in Windows headers + foobar2000 SDK headers
    ✓ Only extension.cpp / dllmain.cpp compile against the PCH (/Yu)
-   ✓ history_manager.cpp / history_panel.cpp also use /Yu (see CMakeLists.txt)
+   ✓ history_manager.cpp / history_panel.cpp / settings.cpp / preferences_page.cpp
+     also use /Yu (see CMakeLists.txt)
 
 src/dllmain.cpp
    ✓ DLL entry point
@@ -109,16 +85,43 @@ src/history_panel.h / history_panel.cpp
      "Playback History" menu command (opens as a floating popup, or can be
      docked into a layout via Layout → Add New UI Element instead)
    ✓ ListBox (track list, double-click to play) + Back button
-   ✓ Font pulled live from foobar2000's own list-font setting
-     (Preferences → Display → Fonts) via query_font_ex()
-   ✓ Background/text colors pulled live from the active theme (incl. dark
-     mode) via query_std_color(), with real-time updates on theme change
+   ✓ Font size, background color, and button height read from settings.h —
+     fall back to foobar2000's own theme/font automatically when set to
+     "auto" (font size 0 / bg color -1)
+   ✓ apply_settings_all() pushes new settings into every open panel instance
+     immediately after Preferences → Apply, no restart needed
    ✓ Supports multiple simultaneously open instances (static registry)
+
+src/settings.h / settings.cpp
+   ✓ cfg_int declarations for the 3 user-adjustable values: font size (px,
+     0 = auto), background color (COLORREF, -1 = auto/theme), Back button
+     height (px)
+   ✓ Persisted automatically by the SDK across foobar2000 restarts
+   ✓ Central place to add more settings later without restructuring
+
+src/preferences_page.h / preferences_page.cpp
+   ✓ preferences_page_v3 (entrypoint) + preferences_page_instance (the page)
+   ✓ Registered under preferences_page::guid_tools → shows up as
+     Preferences → Tools → Playback History
+   ✓ Font size + Back button height as numeric edit boxes; background color
+     via checkbox ("use theme color") + Windows color picker
+   ✓ Apply() writes to settings.h's cfg_int vars and calls
+     history_ui_element_instance::apply_settings_all(); Reset() reverts the
+     displayed (not yet applied) values to defaults per SDK convention
 
 
 🚧 Known open items (see README.md for details)
    • Back/click-to-play can insert into the wrong playlist if the track
      isn't in the currently active one
-   • Panel colors don't yet cover every control (push button background in
-     particular is limited by native Windows theming)
-   • No Preferences → Tools page yet for user-adjustable settings
+   • Panel colors don't yet cover every control (Back button *background*
+     specifically is limited by native Windows theming — button text color
+     and everything else follows the theme/custom settings fine)
+
+✅ Recently resolved
+   • Font size, background color, and Back button height are now
+     user-adjustable via Preferences → Tools → Playback History (see
+     src/settings.* and src/preferences_page.*)
+   • CMakeLists.txt no longer hardcodes a machine-specific SDK path — safe
+     to commit to git and clone on another machine as-is (see README.md's
+     "Manual patches applied to the SDK" section for the two sdk/ files
+     that still need hand-editing if you ever re-fetch a fresh SDK copy)

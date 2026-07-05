@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "history_panel.h"
 #include "history_manager.h"
+#include "settings.h"
 #include <vector>
 #include <algorithm>
 
@@ -33,6 +34,10 @@ history_ui_element_instance::~history_ui_element_instance() {
     if (m_brush_bg) {
         DeleteObject(m_brush_bg);
         m_brush_bg = NULL;
+    }
+    if (m_custom_font) {
+        DeleteObject(m_custom_font);
+        m_custom_font = NULL;
     }
     if (m_hwnd && IsWindow(m_hwnd)) {
         DestroyWindow(m_hwnd);
@@ -90,10 +95,33 @@ void history_ui_element_instance::create_controls(HWND p_parent) {
 }
 
 void history_ui_element_instance::apply_font() {
-    // ดึง font จากการตั้งค่าจริงของ foobar2000 (Preferences > Display > Fonts)
-    // ui_font_lists เพราะ panel นี้แสดงผลเป็นลิสต์ของเพลง คล้าย playlist
-    if (m_callback.is_valid()) {
-        m_font = m_callback->query_font_ex(ui_font_lists);
+    int64_t custom_size = g_cfg_font_size.get();
+
+    if (m_custom_font) {
+        DeleteObject(m_custom_font);
+        m_custom_font = NULL;
+    }
+
+    if (custom_size > 0) {
+        // ใช้ face name เดียวกับ font ของ host เพื่อให้ยังดูเข้ากับสไตล์เดิม แค่ override ขนาด
+        LOGFONTW lf = {};
+        HFONT host_font = m_callback.is_valid() ? (HFONT)m_callback->query_font_ex(ui_font_lists) : NULL;
+        if (host_font && GetObjectW(host_font, sizeof(lf), &lf)) {
+            // มีค่าจาก host แล้ว แค่ override lfHeight ด้านล่าง
+        }
+        else {
+            wcscpy_s(lf.lfFaceName, L"Segoe UI");
+            lf.lfWeight = FW_NORMAL;
+            lf.lfCharSet = DEFAULT_CHARSET;
+            lf.lfQuality = CLEARTYPE_QUALITY;
+        }
+        lf.lfHeight = -(int)custom_size;
+        m_custom_font = CreateFontIndirectW(&lf);
+        m_font = m_custom_font;
+    }
+    else {
+        // 0 = auto: ใช้ font ของ foobar2000 เอง (Preferences > Display > Fonts)
+        m_font = m_callback.is_valid() ? m_callback->query_font_ex(ui_font_lists) : NULL;
     }
 
     if (m_font) {
@@ -103,7 +131,14 @@ void history_ui_element_instance::apply_font() {
 }
 
 void history_ui_element_instance::apply_colors() {
-    if (m_callback.is_valid()) {
+    int64_t custom_bg = g_cfg_bg_color.get();
+
+    if (custom_bg >= 0) {
+        m_color_bg = (COLORREF)custom_bg;
+        // สีตัวหนังสือยังตามธีมเสมอ เพื่อให้อ่านออกไม่ว่าจะตั้งพื้นหลังเป็นสีอะไร
+        if (m_callback.is_valid()) m_color_text = (COLORREF)m_callback->query_std_color(ui_color_text);
+    }
+    else if (m_callback.is_valid()) {
         m_color_bg = (COLORREF)m_callback->query_std_color(ui_color_background);
         m_color_text = (COLORREF)m_callback->query_std_color(ui_color_text);
     }
@@ -135,11 +170,13 @@ void history_ui_element_instance::layout_controls() {
     GetClientRect(m_hwnd, &rc);
     int width = rc.right - rc.left;
     int height = rc.bottom - rc.top;
-    int button_area_height = 52; // พื้นที่รวมด้านบนสำหรับปุ่ม (เท่าเดิม)
+    int button_area_height = (int)g_cfg_button_height.get(); // ปรับได้จาก Preferences
     int button_padding = 3;       // เว้นขอบบน-ล่างของปุ่ม 3px
 
     if (m_back_button) {
-        MoveWindow(m_back_button, 0, button_padding, width, button_area_height - (button_padding * 2), TRUE);
+        int inner_height = button_area_height - (button_padding * 2);
+        if (inner_height < 1) inner_height = 1;
+        MoveWindow(m_back_button, 0, button_padding, width, inner_height, TRUE);
     }
     if (m_listbox) MoveWindow(m_listbox, 0, button_area_height, width, height - button_area_height, TRUE);
 }
@@ -165,6 +202,14 @@ void history_ui_element_instance::populate_list() {
 void history_ui_element_instance::refresh_all() {
     for (auto* instance : g_instances) {
         instance->populate_list();
+    }
+}
+
+void history_ui_element_instance::apply_settings_all() {
+    for (auto* instance : g_instances) {
+        instance->apply_font();
+        instance->apply_colors();
+        instance->layout_controls();
     }
 }
 
