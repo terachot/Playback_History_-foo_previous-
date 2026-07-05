@@ -105,5 +105,5 @@ CMakeLists.txt                   # build configuration
 | | |
 |---|---|
 | Output file | `foo_previous.dll` |
-| Component name | My First Extension (VS Code) |
-| Version | 1.0 |
+ | Component name | terachot |
+ | Version | 1.0.1 |
