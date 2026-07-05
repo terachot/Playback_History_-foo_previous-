@@ -4,12 +4,12 @@ A lightweight foobar2000 component that adds a **Playback History panel** — si
 
 ## Features
 
-- **Tracks your last 20 played songs** automatically in the background (hooks `play_callback`, no setup needed).
+- **Tracks your last 20 played songs** automatically in the background.
 - **Floating panel** (`Playback History`) showing the list, most recent at the top.
 - **Double-click any track** in the list to jump straight to it.
-- **◀ Back button** — steps back to the previously played track, one at a time, removing the current track from history as you go (so repeated presses keep moving backward instead of bouncing between two songs).
+- **◀ Back button** — steps back to the previously played track, one at a time, removing the current track from history as you go.
 - Smart playback: if the track is still in your current active playlist, it plays from its existing position instead of adding a duplicate entry at the bottom.
-- Built as a real **Default UI (DUI) Element**, so it inherits foobar2000's font settings automatically (`Preferences → Display → Fonts → Lists`) — no rebuild needed to change font size.
+- Built as a real **Default UI (DUI) Element**, so it inherits foobar2000's font settings automatically (`Preferences → Display → Fonts → Lists`).
 - History is session-only by design (cleared when foobar2000 closes).
 
 ## How to open it
