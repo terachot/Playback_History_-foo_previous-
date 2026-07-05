@@ -1,6 +1,7 @@
 /build
 /build-x86
-CMakeLists.txt.user
+/sdk
+CMakeLists.txt
 CMakeCache.txt
 CMakeFiles
 CMakeScripts
