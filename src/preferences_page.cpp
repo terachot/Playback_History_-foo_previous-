@@ -34,7 +34,9 @@ history_preferences_instance::~history_preferences_instance() {
 }
 
 t_uint32 history_preferences_instance::get_state() {
-    return m_dirty ? preferences_state::changed : 0;
+    t_uint32 state = preferences_state::dark_mode_supported;   // เพิ่ม: ประกาศว่ารองรับ dark mode เสมอ
+    if (m_dirty) state |= preferences_state::changed;
+    return state;
 }
 
 void history_preferences_instance::create_controls(HWND p_parent) {
@@ -98,6 +100,9 @@ void history_preferences_instance::create_controls(HWND p_parent) {
     for (HWND child : children) {
         if (child) SendMessage(child, WM_SETFONT, (WPARAM)ui_font, TRUE);
     }
+    // เพิ่ม: เปิด dark mode ให้ window ตัวเองและ standard controls ทั้งหมด
+    // ต้องเรียกหลังจาก child controls ถูกสร้างครบแล้วเท่านั้น (AddControls ต้อง enum children)
+    m_darkMode.AddDialogWithControls(m_hwnd);
 }
 
 void history_preferences_instance::load_from_config() {
@@ -189,6 +194,17 @@ LRESULT CALLBACK history_preferences_instance::wnd_proc(HWND hwnd, UINT msg, WPA
     if (!self) return DefWindowProcW(hwnd, msg, wparam, lparam);
 
     switch (msg) {
+    case WM_ERASEBKGND: {
+        if ((bool)self->m_darkMode) {
+            RECT rc;
+            GetClientRect(hwnd, &rc);
+            HDC hdc = (HDC)wparam;
+            static HBRUSH s_dark_bg_brush = CreateSolidBrush(RGB(32, 32, 32));
+            FillRect(hdc, &rc, s_dark_bg_brush);
+            return 1;  // บอกว่า erase เสร็จแล้ว ไม่ต้องให้ DefWindowProc ใช้ class brush เดิมตามปกติ
+        }
+        break;  // light mode: ปล่อยให้ DefWindowProc ใช้ class brush เดิมตามปกติ
+    }
     case WM_COMMAND: {
         int id = LOWORD(wparam);
         int notify = HIWORD(wparam);
