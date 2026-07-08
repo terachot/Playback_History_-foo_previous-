@@ -1,5 +1,6 @@
 #pragma once
 #include "stdafx.h"
+#include <SDK/coreDarkMode.h>
 
 // GUID ของ UI Element นี้ - ต้องตรงกันทั้ง history_ui_element และ history_ui_element_instance
 extern const GUID guid_history_ui_element;
@@ -38,6 +39,8 @@ private:
     COLORREF m_color_bg = RGB(255, 255, 255);
     COLORREF m_color_text = RGB(0, 0, 0);
     HBRUSH m_brush_bg = NULL; // เราเป็นเจ้าของ ต้อง DeleteObject เอง
+
+    fb2k::CCoreDarkModeHooks m_darkMode;   // เพิ่ม: theme ปุ่ม Back ตาม dark mode ของ host
 
     void create_controls(HWND p_parent);
     void layout_controls();

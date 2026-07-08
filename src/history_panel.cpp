@@ -88,6 +88,8 @@ void history_ui_element_instance::create_controls(HWND p_parent) {
         WS_CHILD | WS_VISIBLE,
         0, 0, 0, 0, m_hwnd, (HMENU)(INT_PTR)ID_BACK_BUTTON, GetModuleHandle(NULL), NULL);
 
+    m_darkMode.AddCtrlAuto(m_back_button);   // เพิ่ม
+
     apply_font();
     apply_colors();
     layout_controls();

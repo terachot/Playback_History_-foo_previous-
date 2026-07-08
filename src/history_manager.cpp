@@ -40,34 +40,34 @@ void history_manager::go_back() {
 void history_manager::play_handle(const metadb_handle_ptr& p_track) {
     static_api_ptr_t<playlist_manager> pm;
 
-    t_size playlist = pm->get_active_playlist();
-    if (playlist == pfc_infinite) {
-        playlist = pm->create_playlist("Default", pfc_infinite, pfc_infinite);
-        pm->set_active_playlist(playlist);
-    }
-
-    // เช็คก่อนว่าเพลงนี้อยู่ใน playlist ปัจจุบันอยู่แล้วหรือยัง
-    metadb_handle_list playlist_items;
-    pm->playlist_get_all_items(playlist, playlist_items);
-
+    const t_size playlist_count = pm->get_playlist_count();
+    t_size found_playlist = pfc_infinite;
     t_size found_idx = pfc_infinite;
-    for (t_size i = 0; i < playlist_items.get_count(); i++) {
-        if (playlist_items[i] == p_track) {
-            found_idx = i;
-            break;
+
+    // หาเพลงนี้ใน playlist ทุกอันที่เปิดอยู่ (ไม่ใช่แค่ playlist ที่ active)
+    for (t_size p = 0; p < playlist_count && found_playlist == pfc_infinite; p++) {
+        metadb_handle_list items;
+        pm->playlist_get_all_items(p, items);
+        for (t_size i = 0; i < items.get_count(); i++) {
+            if (items[i] == p_track) {
+                found_playlist = p;
+                found_idx = i;
+                break;
+            }
         }
     }
 
-    if (found_idx == pfc_infinite) {
-        // ไม่มีอยู่ใน playlist นี้ - เพิ่มเข้าไปท้ายสุด
-        found_idx = pm->playlist_get_item_count(playlist);
-        metadb_handle_list list;
-        list.add_item(p_track);
-        pm->playlist_insert_items(playlist, found_idx, list, pfc::bit_array_false());
+    if (found_playlist == pfc_infinite) {
+        // เพลงนี้ไม่อยู่ใน playlist ไหนเลยแล้ว - ไม่เพิ่มเข้า playlist ใดๆ ตามที่กำหนด
+        return;
     }
 
-    // เล่นจากตำแหน่งที่เจอ (หรือตำแหน่งที่เพิ่งเพิ่มเข้าไป)
-    pm->playlist_execute_default_action(playlist, found_idx);
+    // สลับไป playlist ที่เพลงนี้อยู่จริง (เผื่อไม่ตรงกับ playlist ที่ active อยู่ตอนนี้)
+    if (pm->get_active_playlist() != found_playlist) {
+        pm->set_active_playlist(found_playlist);
+    }
+
+    pm->playlist_execute_default_action(found_playlist, found_idx);
 }
 
 // ========== Hook เข้ากับ playback event ของ foobar2000 ==========
