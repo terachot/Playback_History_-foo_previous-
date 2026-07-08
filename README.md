@@ -53,25 +53,8 @@ cmake --build build-x86 --config Release
 
 Output DLL: `foo_previous.dll` (in `build[-x86]/bin/Release/`). Copy it into your foobar2000 `components` folder (matching bitness) and restart foobar2000.
 
-### Compile commands quick reference
-
-CMake is the **only** build path this project actually uses — there's no `build.bat`, `Makefile`, or manual `cl.exe`/`link.exe` step to maintain, everything below goes through `cmake`.
-
-**Full build (first time or after changing `CMakeLists.txt`):**
-```powershell
-cmake -B build -A x64
-cmake --build build --config Release
-```
-
 **Rebuild after only editing `.cpp`/`.h` files** (no need to reconfigure):
 ```powershell
-cmake --build build --config Release
-```
-
-**Clean rebuild** (delete cached CMake state and start over — do this if a fix to `CMakeLists.txt` doesn't seem to take effect):
-```powershell
-Remove-Item -Recurse -Force build
-cmake -B build -A x64
 cmake --build build --config Release
 ```
 
