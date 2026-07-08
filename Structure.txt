@@ -108,20 +108,3 @@ src/preferences_page.h / preferences_page.cpp
    ✓ Apply() writes to settings.h's cfg_int vars and calls
      history_ui_element_instance::apply_settings_all(); Reset() reverts the
      displayed (not yet applied) values to defaults per SDK convention
-
-
-🚧 Known open items (see README.md for details)
-   • Back/click-to-play can insert into the wrong playlist if the track
-     isn't in the currently active one
-   • Panel colors don't yet cover every control (Back button *background*
-     specifically is limited by native Windows theming — button text color
-     and everything else follows the theme/custom settings fine)
-
-✅ Recently resolved
-   • Font size, background color, and Back button height are now
-     user-adjustable via Preferences → Tools → Playback History (see
-     src/settings.* and src/preferences_page.*)
-   • CMakeLists.txt no longer hardcodes a machine-specific SDK path — safe
-     to commit to git and clone on another machine as-is (see README.md's
-     "Manual patches applied to the SDK" section for the two sdk/ files
-     that still need hand-editing if you ever re-fetch a fresh SDK copy)
