@@ -118,16 +118,10 @@ CMakeLists.txt                   # build configuration
 
 `history_manager` and `history_panel` are intentionally decoupled — the manager has no UI code, and the panel only calls into the manager's public API. This made it straightforward to swap the panel's implementation (from a raw Win32 top-level window to a proper DUI popup element) without touching the history logic at all.
 
-## Known limitations / open items
-
-- **Cross-playlist playback**: if you press Back or click a track that isn't in the currently active playlist, it gets appended to whichever playlist is active right now rather than being played from its original playlist/position.
-- **Button background theming**: the panel's background, text, and list colors follow foobar2000's active theme (including dark mode) live — but the Back button's *background* stays native Windows style, since themed push buttons largely ignore custom background colors. Button text color still follows the theme.
-- **No settings page**: font size and other preferences aren't user-configurable via `Preferences → Tools` yet — font size is inherited automatically from foobar2000's own list font setting, which covers the common case but isn't independently adjustable.
-
 ## Component info
 
 | | |
 |---|---|
 | Output file | `foo_previous.dll` |
 | Component name | Playback History |
-| Version | 1.0.1 |
+| Version | 1.0.3 |
